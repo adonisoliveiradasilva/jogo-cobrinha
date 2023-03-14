@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameBoy</title>
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+    <style>
+
+        body{
+            background-color: rgb(137, 194, 244);
+            font-family: 'Press Start 2P', cursive;
+            user-select: none;
+        }
+
+        .geral{
+            background-color: rgb(244, 230, 218);
+            width: 350px;
+            height: 600px;
+            margin: auto;
+            margin-top: 50px;
+            padding-top: 50px;
+            position: relative;
+            border-bottom-right-radius: 30px;
+            box-sizing: border-box;
+            border-bottom: 7px solid rgb(131, 111, 95);
+        }
+
+        .tela{
+            background-color: rgb(21, 21, 21);
+            width: 250px;
+            height: 250px;
+            margin: auto;
+            position: relative;
+            border: 20px solid #404040;
+            outline: none;
+        }
+
+        .div-pause{
+            background-color: rgb(158, 158, 158);
+            width: 250px;
+            height: 250px;
+            margin: auto;
+            position: absolute;
+            opacity: 0.5;
+            display: none;
+        }
+
+        .div-pause .titulo{
+            color:#383838;
+        }
+
+        .menu{
+            width: 250px;
+            height: 250px;
+        }
+
+        .logo{
+            background-image: url("images/snake.png");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        .menu span{
+            color: #AEAEAE;
+            font-size: 15px;
+        }
+
+        .titulo{
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .subtitulo{
+            display: flex;
+            text-align: center;
+            justify-content: center;
+            margin-top: 30px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+
+        #stage{
+            display: none;
+        }
+
+        .botoes{
+            display: flex;
+            padding-top: 30px;
+        }
+
+        .setinhas{
+            width: 130px;
+            height: 80px;
+            margin: auto;
+        }
+
+        .redondinhos{
+            width: 100px;
+            height: 100px;
+            margin: auto;
+            margin-top: 20px;
+        }
+
+        .nivel2{
+            display: flex;
+        }
+
+       
+
+        .div-setinha{
+            width: 30px;
+            height: 30px;
+            background-color: rgb(21, 21, 21);
+            border-bottom: 4px solid #404040;
+            box-sizing: border-box;
+            margin: auto;
+        }
+
+        .setinha{
+            border: none;
+            background-color: transparent;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: 70%;
+            background-image: url("./images/setinha.png");
+        }
+
+        .setinha:focus{
+            outline: none;
+        }
+
+        .setinha-top{
+            transform: rotate(270deg)
+        }
+        .setinha-left{
+            transform: rotate(180deg)
+        }
+        .setinha-right{
+            transform: rotate(0deg)
+        }
+        .setinha-bottom{
+            transform: rotate(90deg)
+        }
+
+        .redondinho{
+            border: none;
+            background-color: transparent;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            color: #AEAEAE;
+            font-weight: 900;
+            font-family: Helvetica Narrow Bold;
+            font-size: 18px;
+        }
+
+        .redondinho:focus{
+            outline: none;
+        }
+
+        .div-redondinho{
+            width: 50px;
+            height: 50px;
+            background-color: rgb(183, 14, 14);
+            border-bottom: 4px solid #690202;
+            box-sizing: border-box;
+            margin: auto;
+            border-radius: 100px;
+        }
+        
+
+        .redondinho-right{
+            margin-left: 50px;
+        }
+
+        .redondinho-left{
+            margin-right: 50px;
+        }
+
+        .score{
+            color: rgb(144, 144, 144);
+            font-size: 20px;
+            font-weight: 100;
+            padding-left: 30px;
+        }
+
+        .start{
+            background-color: rgb(17, 17, 17);
+            width: 40px;
+            height: 10px;
+            border-bottom: 4px solid rgb(69, 68, 68);
+            margin: auto; 
+
+        }
+
+        .button-start{
+            border: none; 
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            cursor: pointer;
+        }
+
+        .button-start:focus{
+            outline: none;
+        }
+
+    </style>
+
+    <script type="text/javascript">
+
+        function keyPush(event){
+            switch(event.keyCode){
+            case 37:
+                if (vx !== vel) { // verificar se a cobra não está se movendo para a direita
+                    vx = -vel;
+                    vy = 0;
+                }
+                break;
+            case 38:
+                if (vy !== vel) { // verificar se a cobra não está se movendo para baixo
+                    vx = 0;
+                    vy = -vel;
+                }
+                break;
+            case 39:
+                if (vx !== -vel) { // verificar se a cobra não está se movendo para a esquerda
+                    vx = vel;
+                    vy = 0;
+                }
+                break;
+            case 40:
+                if (vy !== -vel) { // verificar se a cobra não está se movendo para cima
+                    vx = 0;
+                    vy = vel;
+                }
+            break;
+            }
+        }
+
+            var velocidade = 150;
+
+            var vx = vy = 0;
+            var px = 10; 
+            var py = 15; 
+
+            var tp = 12.5;
+            var qp = 20;
+
+            var ax = ay = 15;
+
+            var trail = [];
+            tail = 5;
+
+            var  vel = 1;
+
+            var isPaused = false;
+            // var bateu = false;
+
+            // function Bateu(){
+            //     bateu = true;
+            // }
+
+            function Pause() {
+                isPaused = !isPaused; 
+            }
+
+
+            function Start(){
+
+                var alertElement = document.querySelector('#alert');
+                
+                
+                document.querySelector(".menu").style.display = "none";
+                document.querySelector("#stage").style.display = "block";
+
+                var pontos = 0;
+                var scoreElement = document.querySelector('.score');
+                var stage = document.getElementById('stage');
+                var ctx = stage.getContext("2d");
+                document.addEventListener("keydown", keyPush);
+
+                setInterval(function() {
+                    if(isPaused){
+                        document.querySelector(".div-pause").style.display = "block" ;
+                        alertElement.innerHTML = "Pause!";
+                    }
+
+                    if (!isPaused) { 
+                        document.querySelector(".div-pause").style.display = "none" ;
+                        game(); 
+                    }
+
+
+
+                    
+
+                }, velocidade); 
+
+                function game(){
+
+                    px += vx;
+                    py += vy;
+
+                    if (px < 0){
+                        px = qp - 1;
+                    }
+
+                    if (px > qp - 1){
+                        px = 0;
+                    }
+
+                    if (py < 0){
+                        py = qp - 1;
+                    }
+
+                    if (py > qp - 1){
+                        py = 0;
+                    }
+
+                    ctx.fillStyle = "rgb(171, 234, 153)";
+                    ctx.fillRect(0,0, stage.width, stage.height);
+                    
+                    ctx.fillStyle = "red";
+                    ctx.fillRect(ax*tp, ay*tp, tp, tp);
+
+                    ctx.fillStyle = "gray";
+
+                    for(i = 0; i < trail.length; i++){
+                        ctx.fillRect(trail[i].x*tp, trail[i].y*tp,  tp, tp);
+
+                        if(trail[i].x == px && trail[i].y == py ){
+                            vx = vy = 0;
+                            tail = 5;
+                            pontos = 0;    
+                        
+                            var novoScore = `Score: ${pontos}`;
+                            scoreElement.innerHTML = novoScore;
+
+                            if(c != 0){
+                                document.querySelector(".div-pause").style.display = "block" ;
+                                alertElement.innerHTML = "Game Over!";
+                            }
+                            
+                        }
+                    }
+                
+                    trail.push({x:px, y:py})
+                    while(trail.length > tail){
+                        trail.shift();
+                        c = 1;
+                    }
+
+                    if(px == ax && py == ay){
+                        pontos++;    
+                        tail++;
+                        ax = Math.floor(Math.random() * qp);
+                        ay = Math.floor(Math.random() * qp);
+                        var novoScore = `Score: ${pontos}`;
+                        scoreElement.innerHTML = novoScore;
+                    }
+                }
+            }
+
+        
+
+    </script>
+    
+    <div class="geral">
+        <span class="score"></span>
+        <div class="tela">
+            <div class="div-pause">
+                <span class="titulo" id="alert">  </span>
+            </div>
+            <div class="menu">
+                <span class="titulo"> Snake Game </span>
+                <div class="logo"></div>
+                <span class="subtitulo"> Pressione A ou S para Começar <span>
+            </div>
+            <canvas id="stage" width="250" height="250"> </canvas>
+        </div>
+        <div class="botoes">
+            <div class="setinhas">
+                <div class="nivel1">
+                    <div class="div-setinha" id="botao-click">
+                        <button class="setinha setinha-top" onclick="keyPush(new KeyboardEvent('keydown', {keyCode: 38}));"></button>
+                    </div>
+                </div>
+                <div class="nivel2">
+                    <div class="div-setinha" id="botao-click">
+                        <button class="setinha setinha-left"  onclick="keyPush(new KeyboardEvent('keydown', {keyCode: 37}));"></button>
+                    </div>
+                    <div class="div-setinha" id="botao-click">
+                        <button class="setinha setinha-right" onclick="keyPush(new KeyboardEvent('keydown', {keyCode: 39}));"></button>
+                    </div>
+                </div>
+                <div class="nivel3">
+                    <div class="div-setinha" id="botao-click">
+                        <button class="setinha setinha-bottom" onclick="keyPush(new KeyboardEvent('keydown', {keyCode: 40}));"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="redondinhos">
+                <div class="nivel1">
+                    <div class="div-redondinho redondinho-right" id="botao-click">
+                        <button class="redondinho" onclick="Start();">A</button>
+                    </div>
+                </div>
+                <div class="nivel2">
+                    <div class="div-redondinho redondinho-left" id="botao-click">
+                        <button class="redondinho " onclick="Start()";>S</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="start">
+            <button class="button-start" onclick="Pause();" ></button>
+        </div>
+    </div>
+    
+</body>
+</html>
