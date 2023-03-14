@@ -53,6 +53,7 @@
 
         .div-pause .titulo{
             color:#383838;
+            animation: blink 1s infinite;
         }
 
         .menu{
@@ -273,6 +274,7 @@
 
             var trail = [];
             tail = 5;
+            let started = false;
 
             var  vel = 1;
 
@@ -289,97 +291,101 @@
 
 
             function Start(){
-
-                var alertElement = document.querySelector('#alert');
                 
-                
-                document.querySelector(".menu").style.display = "none";
-                document.querySelector("#stage").style.display = "block";
+                if (!started) {
+                    started = true;
 
-                var pontos = 0;
-                var scoreElement = document.querySelector('.score');
-                var stage = document.getElementById('stage');
-                var ctx = stage.getContext("2d");
-                document.addEventListener("keydown", keyPush);
-
-                setInterval(function() {
-                    if(isPaused){
-                        document.querySelector(".div-pause").style.display = "block" ;
-                        alertElement.innerHTML = "Pause!";
-                    }
-
-                    if (!isPaused) { 
-                        document.querySelector(".div-pause").style.display = "none" ;
-                        game(); 
-                    }
-
-
-
+                    var alertElement = document.querySelector('#alert');
                     
-
-                }, velocidade); 
-
-                function game(){
-
-                    px += vx;
-                    py += vy;
-
-                    if (px < 0){
-                        px = qp - 1;
-                    }
-
-                    if (px > qp - 1){
-                        px = 0;
-                    }
-
-                    if (py < 0){
-                        py = qp - 1;
-                    }
-
-                    if (py > qp - 1){
-                        py = 0;
-                    }
-
-                    ctx.fillStyle = "rgb(171, 234, 153)";
-                    ctx.fillRect(0,0, stage.width, stage.height);
                     
-                    ctx.fillStyle = "red";
-                    ctx.fillRect(ax*tp, ay*tp, tp, tp);
+                    document.querySelector(".menu").style.display = "none";
+                    document.querySelector("#stage").style.display = "block";
 
-                    ctx.fillStyle = "gray";
+                    var pontos = 0;
+                    var scoreElement = document.querySelector('.score');
+                    var stage = document.getElementById('stage');
+                    var ctx = stage.getContext("2d");
+                    document.addEventListener("keydown", keyPush);
 
-                    for(i = 0; i < trail.length; i++){
-                        ctx.fillRect(trail[i].x*tp, trail[i].y*tp,  tp, tp);
+                    setInterval(function() {
+                        if(isPaused){
+                            document.querySelector(".div-pause").style.display = "block" ;
+                            alertElement.innerHTML = "Pause!";
+                        }
 
-                        if(trail[i].x == px && trail[i].y == py ){
-                            vx = vy = 0;
-                            tail = 5;
-                            pontos = 0;    
+                        if (!isPaused) { 
+                            document.querySelector(".div-pause").style.display = "none" ;
+                            game(); 
+                        }
+
+
+
                         
+
+                    }, velocidade); 
+
+                    function game(){
+
+                        px += vx;
+                        py += vy;
+
+                        if (px < 0){
+                            px = qp - 1;
+                        }
+
+                        if (px > qp - 1){
+                            px = 0;
+                        }
+
+                        if (py < 0){
+                            py = qp - 1;
+                        }
+
+                        if (py > qp - 1){
+                            py = 0;
+                        }
+
+                        ctx.fillStyle = "rgb(171, 234, 153)";
+                        ctx.fillRect(0,0, stage.width, stage.height);
+                        
+                        ctx.fillStyle = "red";
+                        ctx.fillRect(ax*tp, ay*tp, tp, tp);
+
+                        ctx.fillStyle = "gray";
+
+                        for(i = 0; i < trail.length; i++){
+                            ctx.fillRect(trail[i].x*tp, trail[i].y*tp,  tp, tp);
+
+                            if(trail[i].x == px && trail[i].y == py ){
+                                vx = vy = 0;
+                                tail = 5;
+                                pontos = 0;    
+                            
+                                var novoScore = `Score: ${pontos}`;
+                                scoreElement.innerHTML = novoScore;
+
+                                if(c != 0){
+                                    document.querySelector(".div-pause").style.display = "block" ;
+                                    alertElement.innerHTML = "Game Over!";
+                                }
+                                
+                            }
+                        }
+                    
+                        trail.push({x:px, y:py})
+                        while(trail.length > tail){
+                            trail.shift();
+                            c = 1;
+                        }
+
+                        if(px == ax && py == ay){
+                            pontos++;    
+                            tail++;
+                            ax = Math.floor(Math.random() * qp);
+                            ay = Math.floor(Math.random() * qp);
                             var novoScore = `Score: ${pontos}`;
                             scoreElement.innerHTML = novoScore;
-
-                            if(c != 0){
-                                document.querySelector(".div-pause").style.display = "block" ;
-                                alertElement.innerHTML = "Game Over!";
-                            }
-                            
                         }
-                    }
-                
-                    trail.push({x:px, y:py})
-                    while(trail.length > tail){
-                        trail.shift();
-                        c = 1;
-                    }
-
-                    if(px == ax && py == ay){
-                        pontos++;    
-                        tail++;
-                        ax = Math.floor(Math.random() * qp);
-                        ay = Math.floor(Math.random() * qp);
-                        var novoScore = `Score: ${pontos}`;
-                        scoreElement.innerHTML = novoScore;
                     }
                 }
             }
