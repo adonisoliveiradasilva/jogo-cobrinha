@@ -172,9 +172,9 @@
             height: 100%;
             cursor: pointer;
             color: #AEAEAE;
-            font-weight: 900;
-            font-family: Helvetica Narrow Bold;
-            font-size: 18px;
+            font-weight: 00;
+            font-size: 14px;
+            font-family: 'Press Start 2P', cursive;
         }
 
         .redondinho:focus{
@@ -205,6 +205,7 @@
             font-size: 20px;
             font-weight: 100;
             padding-left: 30px;
+            
         }
 
         .start{
@@ -235,25 +236,25 @@
         function keyPush(event){
             switch(event.keyCode){
             case 37:
-                if (vx !== vel) { // verificar se a cobra não está se movendo para a direita
+                if (vx !== vel) {  
                     vx = -vel;
                     vy = 0;
                 }
                 break;
             case 38:
-                if (vy !== vel) { // verificar se a cobra não está se movendo para baixo
+                if (vy !== vel) {  
                     vx = 0;
                     vy = -vel;
                 }
                 break;
             case 39:
-                if (vx !== -vel) { // verificar se a cobra não está se movendo para a esquerda
+                if (vx !== -vel) {  
                     vx = vel;
                     vy = 0;
                 }
                 break;
             case 40:
-                if (vy !== -vel) { // verificar se a cobra não está se movendo para cima
+                if (vy !== -vel) {  
                     vx = 0;
                     vy = vel;
                 }
@@ -279,11 +280,7 @@
             var  vel = 1;
 
             var isPaused = false;
-            // var bateu = false;
-
-            // function Bateu(){
-            //     bateu = true;
-            // }
+            
 
             function Pause() {
                 isPaused = !isPaused; 
